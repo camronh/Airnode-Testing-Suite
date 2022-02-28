@@ -39,35 +39,11 @@
         <v-card-title>Testing Suite</v-card-title>
         <v-row justify="center">
           <v-col cols="12" md="4">
-            <v-card
-              @drop.prevent="uploadConfig($event)"
-              @dragover.prevent="dragover = true"
-              @dragenter.prevent="dragover = true"
-              @dragleave.prevent="dragover = false"
-              :class="{ accent: dragover }"
-            >
-              <v-card-title>Config</v-card-title>
-              <v-card-subtitle v-if="!config">
-                Drag and Drop your config.json file here
-              </v-card-subtitle>
-              <v-card-text v-else>
-                <b>Title:</b> {{ config.ois[0].title }}<br />
-                <b>Base URL:</b>
-                {{ config.ois[0].apiSpecifications.servers[0].url }}<br />
-                <v-autocomplete
-                  auto-select-first
-                  label="Endpoint"
-                  :items="endpointNames"
-                  v-model="selectedEndpoint"
-                  dense
-                  @change="parseStoredEndpoint"
-                />
-              </v-card-text>
-            </v-card>
+            <Config :config.sync="config" :endpointId.sync="endpointId" />
           </v-col>
           <v-col cols="12" md="4">
             <v-card>
-              <v-card-title>Receipt</v-card-title>
+              <Receipt :receipt.sync="receipt" />
             </v-card>
           </v-col>
         </v-row>
@@ -84,17 +60,28 @@
 </template>
 
 <script>
+import Config from "./components/Config.vue";
+import Receipt from "./components/Receipt.vue";
+
 export default {
   name: "App",
-
+  components: {
+    Config,
+    Receipt,
+  },
   data: () => ({
     config: null,
+    endpointId: null,
     dragover: false,
+    receipt: null,
+    selectedEndpoint: null,
   }),
   computed: {
     endpointNames() {
-      if (!this.endpoints) return [];
-      return this.endpoints.map((endpoint) => endpoint.name);
+      if (!this.config) return [];
+      return this.config.triggers.rrp.map(
+        (endpoint) => `${endpoint.endpointName} (${endpoint.endpointId})`
+      );
     },
   },
   methods: {
