@@ -38,58 +38,78 @@
       <v-card>
         <v-card-title>Testing Suite</v-card-title>
         <v-row justify="center">
-          <v-col cols="12" md="4">
-            <Config :config.sync="config" :endpointId.sync="endpointId" />
+          <v-col cols="12" md="5">
+            <Config :config.sync="config" :endpoint.sync="endpoint" />
           </v-col>
-          <v-col cols="12" md="4">
-            <v-card>
-              <Receipt :receipt.sync="receipt" />
-            </v-card>
+          <v-col cols="12" md="5">
+            <Receipt :receipt.sync="receipt" />
           </v-col>
         </v-row>
         <v-row justify="center">
-          <v-col cols="12" md="4">
-            <v-card>
-              <v-card-title>HTTP Gateway API Key</v-card-title>
-            </v-card>
+          <v-col cols="12" md="10">
+            <Params :endpoint="endpoint" :params.sync="params" />
           </v-col>
         </v-row>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="httpDialogOpen = true">HTTP Request</v-btn>
+          <v-btn @click="requesterDialog = true">Smart Contract Request</v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
       </v-card>
     </v-main>
+    <v-dialog v-model="httpDialogOpen" max-width="1200px" fullscreen>
+      <HTTPDialog
+        :endpoint="endpoint"
+        :receipt="receipt"
+        :params="params"
+        @closeDialog="httpDialogOpen = false"
+      />
+    </v-dialog>
+    <v-dialog v-model="requesterDialog" max-width="1200px">
+      <RequesterDialog
+        :endpoint="endpoint"
+        :receipt="receipt"
+        :params="params"
+        @closeDialog="requesterDialog = false"
+      />
+    </v-dialog>
   </v-app>
 </template>
 
 <script>
 import Config from "./components/Config.vue";
 import Receipt from "./components/Receipt.vue";
+import Params from "./components/Params.vue";
+import HTTPDialog from "./components/HTTPDialog.vue";
+import RequesterDialog from "./components/RequesterDialog.vue";
 
 export default {
   name: "App",
   components: {
     Config,
     Receipt,
+    Params,
+    HTTPDialog,
+    RequesterDialog,
   },
   data: () => ({
     config: null,
-    endpointId: null,
+    endpoint: null,
     dragover: false,
     receipt: null,
+    params: null,
     selectedEndpoint: null,
+    httpDialogOpen: false,
+    requesterDialog: false,
   }),
-  computed: {
-    endpointNames() {
-      if (!this.config) return [];
-      return this.config.triggers.rrp.map(
-        (endpoint) => `${endpoint.endpointName} (${endpoint.endpointId})`
-      );
-    },
-  },
+  computed: {},
   methods: {
     async uploadConfig(e) {
       console.log(e);
       this.dragover = false;
       try {
-        this.config = await new Promise((resolve) => {
+        this.config = await new Promise(resolve => {
           if (e.dataTransfer.files.length > 1) {
             console.log("Only 1 file at a time");
           } else {

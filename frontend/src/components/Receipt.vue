@@ -5,7 +5,6 @@
     @dragenter.prevent="dragover = true"
     @dragleave.prevent="dragover = false"
     :class="{ accent: dragover }"
-    height="100%"
   >
     <v-card-title>Receipt</v-card-title>
     <v-card-subtitle v-if="!receipt">
@@ -28,6 +27,7 @@ export default {
   data: () => ({
     receipt: null,
     dragover: false,
+    gatewayKey: null,
   }),
   computed: {},
   methods: {
@@ -35,7 +35,7 @@ export default {
       console.log(e);
       this.dragover = false;
       try {
-        this.receipt = await new Promise((resolve) => {
+        this.receipt = await new Promise(resolve => {
           if (e.dataTransfer.files.length > 1) {
             console.log("Only 1 file at a time");
           } else {

@@ -44,7 +44,7 @@ export default {
   computed: {
     endpointNames() {
       if (!this.config) return [];
-      return this.config.triggers.rrp.map((endpoint) => endpoint.endpointName);
+      return this.config.triggers.rrp.map(endpoint => endpoint.endpointName);
     },
   },
   methods: {
@@ -52,7 +52,7 @@ export default {
       console.log(e);
       this.dragover = false;
       try {
-        this.config = await new Promise((resolve) => {
+        this.config = await new Promise(resolve => {
           if (e.dataTransfer.files.length > 1) {
             console.log("Only 1 file at a time");
           } else {
@@ -70,11 +70,15 @@ export default {
       }
     },
     emitData() {
-      this.$emit("update:config", this.config);
-      const endpointId = this.config.triggers.rrp.find(
-        (endpoint) => endpoint.endpointName === this.selectedEndpoint
+      let endpoint = this.config.ois[0].endpoints.find(
+        endpoint => endpoint.name === this.selectedEndpoint
+      );
+
+      endpoint.endpointId = this.config.triggers.rrp.find(
+        endpoint => endpoint.endpointName === this.selectedEndpoint
       ).endpointId;
-      this.$emit("update:endpointId", endpointId);
+      this.$emit("update:endpoint", endpoint);
+      this.$emit("update:config", this.config);
     },
   },
 };
