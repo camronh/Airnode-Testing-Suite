@@ -2,7 +2,6 @@ const axios = require("axios");
 
 async function makeGatewayRequest(url, gatewayKey, parameters) {
   try {
-    console.log({ url, gatewayKey, parameters });
     const response = await axios.post(
       url,
       {
