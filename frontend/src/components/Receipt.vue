@@ -15,6 +15,20 @@
     <v-card-subtitle v-if="!receipt" class="text-center">
       Drop your receipt.json file from deployment here
     </v-card-subtitle>
+    <v-row v-if="!receipt" justify="center">
+      <v-col cols="12" md="6">
+        <v-file-input
+          placeholder="Upload receipt.json"
+          prepend-icon="mdi-upload"
+          v-model="file"
+          outlined
+          color="accent"
+          dense
+          :error="fileError"
+          :error-messages="fileError ? 'Invalid receipt.json' : ''"
+        />
+      </v-col>
+    </v-row>
     <template v-else>
       <v-card-text>
         <b>Airnode Address:</b> {{ receipt.airnodeWallet.airnodeAddress }}<br />
@@ -32,15 +46,39 @@ export default {
   data: () => ({
     receipt: null,
     dragover: false,
+    file: null,
+    fileError: false,
     gatewayKey: null,
   }),
   computed: {},
+  watch: {
+    async file() {
+      this.receipt = null;
+      this.receipt = await new Promise((resolve) => {
+        console.log({ file: this.file });
+        let fileReader = new FileReader();
+        fileReader.readAsBinaryString(this.file);
+        fileReader.onloadend = function () {
+          try {
+            let receipt = fileReader.result;
+            receipt = JSON.parse(receipt);
+            if (receipt.airnodeWallet) resolve(receipt);
+            else throw "Invalid receipt";
+          } catch (error) {
+            this.fileError = true;
+            resolve(null);
+          }
+        };
+      });
+      if (!this.receipt) this.fileError = true;
+    },
+  },
   methods: {
     async uploadReceipt(e) {
       console.log(e);
       this.dragover = false;
       try {
-        this.receipt = await new Promise(resolve => {
+        this.receipt = await new Promise((resolve) => {
           if (e.dataTransfer.files.length > 1) {
             console.log("Only 1 file at a time");
           } else {

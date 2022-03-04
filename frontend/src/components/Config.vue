@@ -16,10 +16,17 @@
       Drag and Drop your config.json file here
     </v-card-subtitle>
     <v-row v-if="!config" justify="center">
-      <v-col cols="12" md="5">
-        <UploadButton v-model="file" />
-
-        <!-- <v-file-input hide-input prepend-icon="mdi-upload" /> -->
+      <v-col cols="12" md="6">
+        <v-file-input
+          placeholder="Upload config.json"
+          prepend-icon="mdi-upload"
+          v-model="file"
+          outlined
+          color="accent"
+          dense
+          :error="fileError"
+          :error-messages="fileError ? 'Invalid config.json' : ''"
+        />
       </v-col>
     </v-row>
     <template v-else>
@@ -45,24 +52,43 @@
 </template>
 
 <script>
-import UploadButton from "./UploadConfig.vue";
-
 export default {
   name: "App",
-  components: {
-    UploadButton,
-  },
+  components: {},
 
   data: () => ({
     config: null,
     dragover: false,
     selectedEndpoint: null,
     file: null,
+    fileError: false,
   }),
   computed: {
     endpointNames() {
       if (!this.config) return [];
       return this.config.triggers.rrp.map((endpoint) => endpoint.endpointName);
+    },
+  },
+  watch: {
+    async file() {
+      this.config = null;
+      this.config = await new Promise((resolve) => {
+        console.log({ file: this.file });
+        let fileReader = new FileReader();
+        fileReader.readAsBinaryString(this.file);
+        fileReader.onloadend = function () {
+          try {
+            let config = fileReader.result;
+            config = JSON.parse(config);
+            if (config.chains && config.triggers) resolve(config);
+            else throw "Invalid config";
+          } catch (error) {
+            this.fileError = true;
+            resolve(null);
+          }
+        };
+      });
+      if (!this.config) this.fileError = true;
     },
   },
   methods: {
@@ -87,6 +113,7 @@ export default {
         console.log(error);
       }
     },
+
     emitData() {
       let endpoint = this.config.ois[0].endpoints.find(
         (endpoint) => endpoint.name === this.selectedEndpoint
