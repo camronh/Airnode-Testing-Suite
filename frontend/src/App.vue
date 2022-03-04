@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="transparent" dark>
+    <v-app-bar app dark>
       <h1>Airnode Testing Suite</h1>
 
       <v-spacer></v-spacer>
@@ -38,6 +38,8 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn @click="httpDialogOpen = true">HTTP Request</v-btn>
+              <v-spacer></v-spacer>
+
               <v-btn @click="requesterDialog = true"
                 >Smart Contract Request</v-btn
               >

@@ -14,7 +14,6 @@
         v-model="selectedParams"
         @change="$emit('update:params', parameters)"
         clearable
-        deletable-chips
         :items="paramsNames"
       />
     </v-card-text>

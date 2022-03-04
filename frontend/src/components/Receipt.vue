@@ -4,10 +4,15 @@
     @dragover.prevent="dragover = true"
     @dragenter.prevent="dragover = true"
     @dragleave.prevent="dragover = false"
-    :class="{ accent: dragover }"
+    :class="{ primary: dragover }"
+    :light="dragover"
+    height="100%"
+    max-height="100%"
+    id="receipt-card"
+    outlined
   >
-    <v-card-title>Receipt</v-card-title>
-    <v-card-subtitle v-if="!receipt">
+    <v-card-title class="justify-center"> Receipt</v-card-title>
+    <v-card-subtitle v-if="!receipt" class="text-center">
       Drop your receipt.json file from deployment here
     </v-card-subtitle>
     <template v-else>
