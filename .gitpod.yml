@@ -1,5 +1,6 @@
 tasks:
-  - init: cd frontend && npm install
+  - before: cd frontend
+    init: npm install
     command: yarn serve
 ports:
   - port: 8080
