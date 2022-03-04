@@ -23,6 +23,7 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.19.2",
     "@vue/cli-plugin-babel": "~4.5.14",
     "@vue/cli-plugin-eslint": "~4.5.14",
     "@vue/cli-plugin-vuex": "~4.5.14",

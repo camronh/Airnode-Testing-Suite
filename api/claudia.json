@@ -1,0 +1,10 @@
+{
+  "lambda": {
+    "role": "testing-suite-api-executor",
+    "name": "testing-suite-api",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "9x0flm9891"
+  }
+}

@@ -15,6 +15,20 @@
     <v-card-subtitle v-if="!config" class="text-center">
       Drag and Drop your config.json file here
     </v-card-subtitle>
+    <v-row v-if="!config" justify="center">
+      <v-col cols="12" md="6">
+        <v-file-input
+          placeholder="Upload config.json"
+          prepend-icon="mdi-upload"
+          v-model="file"
+          outlined
+          color="accent"
+          dense
+          :error="fileError"
+          :error-messages="fileError ? 'Invalid config.json' : ''"
+        />
+      </v-col>
+    </v-row>
     <template v-else>
       <v-card-text>
         <b>Title:</b> {{ config.ois[0].title }}<br />
@@ -40,16 +54,41 @@
 <script>
 export default {
   name: "App",
+  components: {},
 
   data: () => ({
     config: null,
     dragover: false,
     selectedEndpoint: null,
+    file: null,
+    fileError: false,
   }),
   computed: {
     endpointNames() {
       if (!this.config) return [];
-      return this.config.triggers.rrp.map(endpoint => endpoint.endpointName);
+      return this.config.triggers.rrp.map((endpoint) => endpoint.endpointName);
+    },
+  },
+  watch: {
+    async file() {
+      this.config = null;
+      this.config = await new Promise((resolve) => {
+        console.log({ file: this.file });
+        let fileReader = new FileReader();
+        fileReader.readAsBinaryString(this.file);
+        fileReader.onloadend = function () {
+          try {
+            let config = fileReader.result;
+            config = JSON.parse(config);
+            if (config.chains && config.triggers) resolve(config);
+            else throw "Invalid config";
+          } catch (error) {
+            this.fileError = true;
+            resolve(null);
+          }
+        };
+      });
+      if (!this.config) this.fileError = true;
     },
   },
   methods: {
@@ -57,7 +96,7 @@ export default {
       console.log(e);
       this.dragover = false;
       try {
-        this.config = await new Promise(resolve => {
+        this.config = await new Promise((resolve) => {
           if (e.dataTransfer.files.length > 1) {
             console.log("Only 1 file at a time");
           } else {
@@ -74,13 +113,14 @@ export default {
         console.log(error);
       }
     },
+
     emitData() {
       let endpoint = this.config.ois[0].endpoints.find(
-        endpoint => endpoint.name === this.selectedEndpoint
+        (endpoint) => endpoint.name === this.selectedEndpoint
       );
 
       endpoint.endpointId = this.config.triggers.rrp.find(
-        endpoint => endpoint.endpointName === this.selectedEndpoint
+        (endpoint) => endpoint.endpointName === this.selectedEndpoint
       ).endpointId;
       this.$emit("update:endpoint", endpoint);
       this.$emit("update:config", this.config);
@@ -88,3 +128,22 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.file-select > .select-button {
+  padding: 1rem;
+
+  color: white;
+  background-color: #2ea169;
+
+  border-radius: 0.3rem;
+
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Don't forget to hide the original file input! */
+.file-select > input[type="file"] {
+  display: none;
+}
+</style>
