@@ -1,25 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+    <v-app-bar app dark>
+      <h1>Airnode Testing Suite</h1>
 
       <v-spacer></v-spacer>
 
@@ -35,29 +17,39 @@
 
     <v-main>
       <br />
-      <v-card>
-        <v-card-title>Testing Suite</v-card-title>
-        <v-row justify="center">
-          <v-col cols="12" md="5">
-            <Config :config.sync="config" :endpoint.sync="endpoint" />
-          </v-col>
-          <v-col cols="12" md="5">
-            <Receipt :receipt.sync="receipt" />
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col cols="12" md="10">
-            <Params :endpoint="endpoint" :params.sync="params" />
-          </v-col>
-        </v-row>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="httpDialogOpen = true">HTTP Request</v-btn>
-          <v-btn @click="requesterDialog = true">Smart Contract Request</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
+      <v-row justify="center">
+        <v-col cols="12" md="10">
+          <v-card max-width="100%">
+            <br />
+            <br />
+            <v-row justify="center">
+              <v-col cols="12" md="5">
+                <Config :config.sync="config" :endpoint.sync="endpoint" />
+              </v-col>
+              <v-col cols="12" md="5">
+                <Receipt :receipt.sync="receipt" />
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <v-col cols="12" md="10">
+                <Params :endpoint="endpoint" :params.sync="params" />
+              </v-col>
+            </v-row>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn @click="httpDialogOpen = true">HTTP Request</v-btn>
+              <v-spacer></v-spacer>
+
+              <v-btn @click="requesterDialog = true"
+                >Smart Contract Request</v-btn
+              >
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-main>
+
     <v-dialog v-model="httpDialogOpen" max-width="1200px" fullscreen>
       <HTTPDialog
         :endpoint="endpoint"
@@ -66,6 +58,7 @@
         @closeDialog="httpDialogOpen = false"
       />
     </v-dialog>
+
     <v-dialog v-model="requesterDialog" max-width="1200px">
       <RequesterDialog
         :endpoint="endpoint"

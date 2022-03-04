@@ -4,10 +4,15 @@
     @dragover.prevent="dragover = true"
     @dragenter.prevent="dragover = true"
     @dragleave.prevent="dragover = false"
-    :class="{ accent: dragover }"
+    :class="{ primary: dragover }"
+    :light="dragover"
+    id="config-card"
+    height="100%"
+    max-height="100%"
+    outlined
   >
-    <v-card-title>Config</v-card-title>
-    <v-card-subtitle v-if="!config">
+    <v-card-title class="justify-center">Config</v-card-title>
+    <v-card-subtitle v-if="!config" class="text-center">
       Drag and Drop your config.json file here
     </v-card-subtitle>
     <v-row v-if="!config" justify="center">
