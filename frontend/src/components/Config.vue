@@ -10,6 +10,13 @@
     <v-card-subtitle v-if="!config">
       Drag and Drop your config.json file here
     </v-card-subtitle>
+    <v-row v-if="!config" justify="center">
+      <v-col cols="12" md="5">
+        <UploadButton v-model="file" />
+
+        <!-- <v-file-input hide-input prepend-icon="mdi-upload" /> -->
+      </v-col>
+    </v-row>
     <template v-else>
       <v-card-text>
         <b>Title:</b> {{ config.ois[0].title }}<br />
@@ -33,18 +40,24 @@
 </template>
 
 <script>
+import UploadButton from "./UploadConfig.vue";
+
 export default {
   name: "App",
+  components: {
+    UploadButton,
+  },
 
   data: () => ({
     config: null,
     dragover: false,
     selectedEndpoint: null,
+    file: null,
   }),
   computed: {
     endpointNames() {
       if (!this.config) return [];
-      return this.config.triggers.rrp.map(endpoint => endpoint.endpointName);
+      return this.config.triggers.rrp.map((endpoint) => endpoint.endpointName);
     },
   },
   methods: {
@@ -52,7 +65,7 @@ export default {
       console.log(e);
       this.dragover = false;
       try {
-        this.config = await new Promise(resolve => {
+        this.config = await new Promise((resolve) => {
           if (e.dataTransfer.files.length > 1) {
             console.log("Only 1 file at a time");
           } else {
@@ -71,11 +84,11 @@ export default {
     },
     emitData() {
       let endpoint = this.config.ois[0].endpoints.find(
-        endpoint => endpoint.name === this.selectedEndpoint
+        (endpoint) => endpoint.name === this.selectedEndpoint
       );
 
       endpoint.endpointId = this.config.triggers.rrp.find(
-        endpoint => endpoint.endpointName === this.selectedEndpoint
+        (endpoint) => endpoint.endpointName === this.selectedEndpoint
       ).endpointId;
       this.$emit("update:endpoint", endpoint);
       this.$emit("update:config", this.config);
@@ -83,3 +96,22 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.file-select > .select-button {
+  padding: 1rem;
+
+  color: white;
+  background-color: #2ea169;
+
+  border-radius: 0.3rem;
+
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Don't forget to hide the original file input! */
+.file-select > input[type="file"] {
+  display: none;
+}
+</style>
