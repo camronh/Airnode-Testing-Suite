@@ -1,15 +1,16 @@
 <template>
   <v-sheet>
     <v-btn
-      color="primary"
       outlined
+      text
       @click="
         parameters = params;
         dialogOpen = true;
       "
       :disabled="!paramsAreFilled"
-      >HTTP Request</v-btn
     >
+      HTTP Request
+    </v-btn>
     <v-dialog v-model="dialogOpen" fullscreen>
       <v-card>
         <v-card-title>
@@ -25,11 +26,16 @@
             dense
             label="Gateway Key"
             v-model="gatewayKey"
-            auto-focus
+            autofocus
           >
           </v-text-field>
           <v-row>
-            <v-col cols="12" md="2" v-for="(value, name) in parameters" :key="name">
+            <v-col
+              cols="12"
+              md="2"
+              v-for="(value, name) in parameters"
+              :key="name"
+            >
               <v-text-field
                 outlined
                 dense
@@ -40,7 +46,14 @@
               </v-text-field>
             </v-col>
             <v-col cols="12" md="2">
-              <v-btn block outlined color="primary" @click="makeRequest">
+              <v-btn
+                block
+                outlined
+                color="primary"
+                @click="makeRequest"
+                text
+                :disabled="!paramsAreFilled || !gatewayKey"
+              >
                 Make Request
               </v-btn>
             </v-col>

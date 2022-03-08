@@ -4,7 +4,7 @@
     @dragover.prevent="dragover = true"
     @dragenter.prevent="dragover = true"
     @dragleave.prevent="dragover = false"
-    :class="{ primary: dragover }"
+    :class="{ accent: dragover }"
     :light="dragover"
     height="100%"
     max-height="100%"

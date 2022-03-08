@@ -1,68 +1,84 @@
 <template>
-  <v-card>
-    <v-card-title>
-      Smart Contract Request
-      <v-spacer></v-spacer>
-      <v-btn @click="$emit('closeDialog')" icon>
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </v-card-title>
-    <v-card-subtitle>
-      SponsorWallet Balance: {{ sponsorWalletBalance }} ETH
-    </v-card-subtitle>
-    <v-card-text>
-      <v-row justify="center">
-        <v-col cols="12" md="3">
-          <v-btn
-            block
-            outlined
-            color="primary"
-            @click="fundSponsorWallet"
-            v-if="walletConnected"
-            :loading="fundingSponsorWallet"
-          >
-            Fund Sponsor Wallet
+  <v-sheet>
+    <v-btn
+      outlined
+      color="primary"
+      @click="dialog = true"
+      :disabled="!paramsAreFilled"
+      text
+    >
+      Blockchain Request
+    </v-btn>
+    <v-dialog v-model="dialog">
+      <v-card>
+        <v-card-title>
+          Smart Contract Request
+          <v-spacer></v-spacer>
+          <v-btn @click="dialog = false" icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-btn
-            block
-            outlined
-            color="primary"
-            @click="makeRequest"
-            v-if="walletConnected"
-          >
-            Make Request
-          </v-btn>
-        </v-col>
-      </v-row>
-      <br />
+        </v-card-title>
+        <v-card-subtitle>
+          SponsorWallet Balance: {{ sponsorWalletBalance }} ETH
+        </v-card-subtitle>
+        <v-card-text>
+          <v-row justify="center">
+            <v-col cols="12" md="3">
+              <v-btn
+                block
+                outlined
+                text
+                color="primary"
+                @click="fundSponsorWallet"
+                v-if="walletConnected"
+                :loading="fundingSponsorWallet"
+              >
+                Fund Sponsor Wallet
+              </v-btn>
+            </v-col>
+            <v-col cols="12" md="3">
+              <v-btn
+                block
+                outlined
+                text
+                color="primary"
+                @click="makeRequest"
+                v-if="walletConnected"
+              >
+                Make Request
+              </v-btn>
+            </v-col>
+          </v-row>
+          <br />
 
-      <v-divider></v-divider>
-      <br />
-      <v-row align="center" justify="center">
-        <v-btn
-          v-if="!walletConnected"
-          @click="connectWallet"
-          outlined
-          color="primary"
-        >
-          Connect Wallet
-        </v-btn>
-        <v-col cols="12" md="11" v-else>
-          <v-textarea
-            dense
-            label="Request Logs"
-            outlined
-            readonly
-            :value="logString"
-            :loading="makingRequest"
-          >
-          </v-textarea>
-        </v-col>
-      </v-row>
-    </v-card-text>
-  </v-card>
+          <v-divider></v-divider>
+          <br />
+          <v-row align="center" justify="center">
+            <v-btn
+              v-if="!walletConnected"
+              @click="connectWallet"
+              outlined
+              color="primary"
+            >
+              Connect Wallet
+            </v-btn>
+            <v-col cols="12" md="11" v-else>
+              <v-textarea
+                dense
+                label="Request Logs"
+                outlined
+                auto-grow
+                readonly
+                :value="logString"
+                :loading="makingRequest"
+              >
+              </v-textarea>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </v-sheet>
 </template>
 
 <script>
@@ -80,12 +96,13 @@ export default {
       chainId: null,
       signer: null,
       address: "",
-      walletConnected: false,
+      walletConnected: true,
       sponsorAddress: "0xe2dB4f54F8FAB66e44386e49aFcB3EF4a87a8787",
       sponsorWalletAddress: "",
       sponsorWalletBalance: 0,
       requesterContract: null,
       rrpContract: null,
+      dialog: false,
     };
   },
   async mounted() {
@@ -159,7 +176,12 @@ export default {
     },
     async makeRequest() {
       const { encode } = require("@api3/airnode-abi");
-      this.postToLog("Making request...", true);
+      this.postToLog(
+        `Airnode Address: ${this.receipt.airnodeWallet.airnodeAddress}
+Endpoint: ${this.endpoint.endpointId} (${this.endpoint.name})
+Params: ${JSON.stringify(this.params)}\n\nMaking Request...`,
+        true
+      );
       try {
         let params = [];
         for (let key in this.params) {
@@ -222,6 +244,11 @@ export default {
       const airnodeProtocol = require("@api3/airnode-protocol");
       const rrpArtifacts = airnodeProtocol.AirnodeRrpFactory;
       return rrpArtifacts.abi;
+    },
+    paramsAreFilled() {
+      if (!this.params || !this.endpoint) return false;
+      for (let param in this.params) if (!this.params[param]) return false;
+      return true;
     },
   },
 };

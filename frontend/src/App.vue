@@ -5,11 +5,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
+      <v-btn text>
         <span class="mr-2">Latest Release</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
@@ -49,14 +45,20 @@
               />
               <v-spacer></v-spacer>
 
-              <v-btn
+              <!-- <v-btn
                 outlined
                 color="primary"
                 @click="requesterDialog = true"
                 :disabled="!paramsAreFilled"
               >
                 Smart Contract Request
-              </v-btn>
+              </v-btn> -->
+              <RequesterDialog
+                :endpoint="endpoint"
+                :receipt="receipt"
+                :params="params"
+                @closeDialog="requesterDialog = false"
+              />
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -64,23 +66,7 @@
       </v-row>
     </v-main>
 
-    <v-dialog v-model="httpDialogOpen" max-width="1200px" fullscreen>
-      <HTTPDialog
-        :endpoint="endpoint"
-        :receipt="receipt"
-        :params.sync="params"
-        @closeDialog="httpDialogOpen = false"
-      />
-    </v-dialog>
-
-    <v-dialog v-model="requesterDialog" max-width="1200px">
-      <RequesterDialog
-        :endpoint="endpoint"
-        :receipt="receipt"
-        :params="params"
-        @closeDialog="requesterDialog = false"
-      />
-    </v-dialog>
+    <v-dialog v-model="requesterDialog" max-width="1200px"> </v-dialog>
   </v-app>
 </template>
 
