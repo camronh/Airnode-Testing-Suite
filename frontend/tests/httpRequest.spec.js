@@ -6,6 +6,8 @@ test("HTTP Request", async ({ page }) => {
   await expect(page.locator("text=CamsCSRNG")).toBeVisible();
   await page.click("text=Endpoint", { force: true });
   await page.click("text=GET /randomNumber");
+  await expect(page.locator("text=HTTP Request")).toBeDisabled();
+
   await page.click("#max-checkbox", { force: true });
   await page.type("text=max", "100");
   await expect(page.locator("text=HTTP Request")).toBeDisabled();

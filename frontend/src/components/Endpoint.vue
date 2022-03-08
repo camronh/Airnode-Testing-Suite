@@ -6,7 +6,10 @@
           auto-select-first
           label="Endpoint"
           outlined
-          @change="$emit('update:endpoint', endpoint)"
+          @change="
+            $emit('update:endpoint', endpoint);
+            $emit('update:params', enabledParams);
+          "
           :items="endpointNames"
           v-model="selectedEndpoint"
           dense
@@ -25,7 +28,11 @@
           <v-col cols="12" md="4" :key="param">
             <v-card-text>
               <v-row align="center">
-                <v-checkbox @change="$emit('update:params', enabledParams)" :id="`${param}-checkbox`" v-model="enabled[param]">
+                <v-checkbox
+                  @change="$emit('update:params', enabledParams)"
+                  :id="`${param}-checkbox`"
+                  v-model="enabled[param]"
+                >
                 </v-checkbox>
                 <v-text-field
                   dense

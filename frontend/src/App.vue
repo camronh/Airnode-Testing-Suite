@@ -41,13 +41,12 @@
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="primary"
-                outlined
-                @click="httpDialogOpen = true"
-                :disabled="!paramsAreFilled"
-                >HTTP Request</v-btn
-              >
+
+              <HTTPDialog
+                :endpoint="endpoint"
+                :receipt="receipt"
+                :params="params"
+              />
               <v-spacer></v-spacer>
 
               <v-btn
@@ -69,7 +68,7 @@
       <HTTPDialog
         :endpoint="endpoint"
         :receipt="receipt"
-        :params="params"
+        :params.sync="params"
         @closeDialog="httpDialogOpen = false"
       />
     </v-dialog>
@@ -106,14 +105,14 @@ export default {
     endpoint: null,
     dragover: false,
     receipt: null,
-    params: null,
+    params: {},
     selectedEndpoint: null,
     httpDialogOpen: false,
     requesterDialog: false,
   }),
   computed: {
     paramsAreFilled() {
-      if (!this.params) return false;
+      if (!this.params || !this.endpoint) return false;
       for (let param in this.params) {
         if (!this.params[param]) return false;
       }
