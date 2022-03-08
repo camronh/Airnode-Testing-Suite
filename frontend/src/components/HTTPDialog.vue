@@ -8,7 +8,7 @@
       </v-btn>
     </v-card-title>
     <v-card-text>
-      <v-text-field outlined dense label="Gateway Key" v-model="gatewayKey">
+      <v-text-field outlined dense label="Gateway Key" v-model="gatewayKey" auto-focus>
       </v-text-field>
       <v-row>
         <v-col cols="12" md="2" v-for="(value, name) in params" :key="name">

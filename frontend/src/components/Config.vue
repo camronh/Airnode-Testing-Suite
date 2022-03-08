@@ -35,18 +35,6 @@
         <b>Base URL:</b>
         {{ config.ois[0].apiSpecifications.servers[0].url }}<br />
       </v-card-text>
-      <v-card-text>
-        <v-autocomplete
-          auto-select-first
-          label="Endpoint"
-          outlined
-          :items="endpointNames"
-          v-model="selectedEndpoint"
-          dense
-          :filled="selectedEndpoint"
-          @change="emitData"
-        />
-      </v-card-text>
     </template>
   </v-card>
 </template>
@@ -109,21 +97,10 @@ export default {
             reader.readAsText(file);
           }
         });
+        this.$emit("update:config", this.config);
       } catch (error) {
         console.log(error);
       }
-    },
-
-    emitData() {
-      let endpoint = this.config.ois[0].endpoints.find(
-        (endpoint) => endpoint.name === this.selectedEndpoint
-      );
-
-      endpoint.endpointId = this.config.triggers.rrp.find(
-        (endpoint) => endpoint.endpointName === this.selectedEndpoint
-      ).endpointId;
-      this.$emit("update:endpoint", endpoint);
-      this.$emit("update:config", this.config);
     },
   },
 };

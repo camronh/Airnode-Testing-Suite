@@ -19,12 +19,12 @@
       <br />
       <v-row justify="center">
         <v-col cols="12" md="10">
-          <v-card max-width="100%">
+          <v-card max-width="100%" outlined>
             <br />
             <br />
             <v-row justify="center">
               <v-col cols="12" md="5">
-                <Config :config.sync="config" :endpoint.sync="endpoint" />
+                <Config :config.sync="config" />
               </v-col>
               <v-col cols="12" md="5">
                 <Receipt :receipt.sync="receipt" />
@@ -32,17 +32,32 @@
             </v-row>
             <v-row justify="center">
               <v-col cols="12" md="10">
-                <Params :endpoint="endpoint" :params.sync="params" />
+                <Endpoint
+                  :config="config"
+                  :endpoint.sync="endpoint"
+                  :params.sync="params"
+                />
               </v-col>
             </v-row>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn @click="httpDialogOpen = true">HTTP Request</v-btn>
+              <v-btn
+                color="primary"
+                outlined
+                @click="httpDialogOpen = true"
+                :disabled="!paramsAreFilled"
+                >HTTP Request</v-btn
+              >
               <v-spacer></v-spacer>
 
-              <v-btn @click="requesterDialog = true"
-                >Smart Contract Request</v-btn
+              <v-btn
+                outlined
+                color="primary"
+                @click="requesterDialog = true"
+                :disabled="!paramsAreFilled"
               >
+                Smart Contract Request
+              </v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -73,7 +88,7 @@
 <script>
 import Config from "./components/Config.vue";
 import Receipt from "./components/Receipt.vue";
-import Params from "./components/Params.vue";
+import Endpoint from "./components/Endpoint.vue";
 import HTTPDialog from "./components/HTTPDialog.vue";
 import RequesterDialog from "./components/RequesterDialog.vue";
 
@@ -82,7 +97,7 @@ export default {
   components: {
     Config,
     Receipt,
-    Params,
+    Endpoint,
     HTTPDialog,
     RequesterDialog,
   },
@@ -96,29 +111,15 @@ export default {
     httpDialogOpen: false,
     requesterDialog: false,
   }),
-  computed: {},
-  methods: {
-    async uploadConfig(e) {
-      console.log(e);
-      this.dragover = false;
-      try {
-        this.config = await new Promise(resolve => {
-          if (e.dataTransfer.files.length > 1) {
-            console.log("Only 1 file at a time");
-          } else {
-            const file = e.dataTransfer.files[0];
-            let reader = new FileReader();
-            reader.onload = function (event) {
-              const uploadString = event.target.result;
-              resolve(JSON.parse(uploadString));
-            };
-            reader.readAsText(file);
-          }
-        });
-      } catch (error) {
-        console.log(error);
+  computed: {
+    paramsAreFilled() {
+      if (!this.params) return false;
+      for (let param in this.params) {
+        if (!this.params[param]) return false;
       }
+      return true;
     },
   },
+  methods: {},
 };
 </script>
