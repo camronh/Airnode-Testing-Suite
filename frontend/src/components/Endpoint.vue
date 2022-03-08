@@ -6,10 +6,7 @@
           auto-select-first
           label="Endpoint"
           outlined
-          @change="
-            $emit('update:endpoint', endpoint);
-            $emit('update:params', enabledParams);
-          "
+          @change="parseParams"
           :items="endpointNames"
           v-model="selectedEndpoint"
           dense
@@ -20,26 +17,25 @@
     </template>
     <template v-if="endpoint">
       <v-card-title>Parameters</v-card-title>
-      <v-card-subtitle>
-        The parameters to be sent to the HTTP Gateway
-      </v-card-subtitle>
+      <v-card-subtitle> The parameters to be sent to Airnode </v-card-subtitle>
       <v-row>
-        <template v-for="param of paramNames">
-          <v-col cols="12" md="4" :key="param">
+        <template v-for="(value, name) in allParams">
+          <v-col cols="12" md="4" :key="name">
             <v-card-text>
               <v-row align="center">
                 <v-checkbox
                   @change="$emit('update:params', enabledParams)"
-                  :id="`${param}-checkbox`"
-                  v-model="enabled[param]"
+                  :id="`${name}-checkbox`"
+                  v-model="enabled[name]"
                 >
                 </v-checkbox>
                 <v-text-field
                   dense
                   @input="$emit('update:params', enabledParams)"
-                  :label="param"
-                  :disabled="!enabled[param]"
-                  v-model="parameters[param]"
+                  :label="name"
+                  :id="`${name}-text-field`"
+                  :disabled="!enabled[name]"
+                  v-model="params[name]"
                 ></v-text-field>
               </v-row>
             </v-card-text>
@@ -53,15 +49,14 @@
 <script>
 export default {
   name: "App",
-  props: ["config"],
+  props: ["config", "params"],
 
   data: () => ({
-    selectedParams: [],
-    parameters: {},
     enabled: {
       _type: true,
       _path: true,
     },
+    allParams: {},
     selectedEndpoint: null,
   }),
   computed: {
@@ -78,8 +73,8 @@ export default {
     },
     enabledParams() {
       const enabledParams = {};
-      for (let param of this.paramNames) {
-        if (this.enabled[param]) enabledParams[param] = this.parameters[param];
+      for (let param in this.params) {
+        if (this.enabled[param]) enabledParams[param] = this.params[param];
       }
       return enabledParams;
     },
@@ -107,6 +102,18 @@ export default {
         (endpoint) => endpoint.endpointName === this.selectedEndpoint
       ).endpointId;
       this.$emit("update:endpoint", endpoint);
+    },
+    parseParams() {
+      let paramsList = this.endpoint.parameters.map((param) => param.name);
+      paramsList.push(...["_type", "_path"]);
+      let params = {};
+      paramsList.forEach((param) => {
+        params[param] = "";
+      });
+      this.params = params;
+      this.allParams = params;
+      this.$emit("update:endpoint", this.endpoint);
+      this.$emit("update:params", params);
     },
   },
 };

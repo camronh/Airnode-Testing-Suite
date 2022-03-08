@@ -3,10 +3,7 @@
     <v-btn
       outlined
       text
-      @click="
-        parameters = params;
-        dialogOpen = true;
-      "
+      @click="dialogOpen = true"
       :disabled="!paramsAreFilled"
     >
       HTTP Request
@@ -16,7 +13,13 @@
         <v-card-title>
           HTTP Request
           <v-spacer></v-spacer>
-          <v-btn @click="dialogOpen = false" icon>
+          <v-btn
+            @click="
+              $emit('update:params', params);
+              dialogOpen = false;
+            "
+            icon
+          >
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
@@ -30,18 +33,13 @@
           >
           </v-text-field>
           <v-row>
-            <v-col
-              cols="12"
-              md="2"
-              v-for="(value, name) in parameters"
-              :key="name"
-            >
+            <v-col cols="12" md="2" v-for="(value, name) in params" :key="name">
               <v-text-field
                 outlined
                 dense
-                v-model="parameters[name]"
+                :id="`${name}-http-field`"
+                v-model="params[name]"
                 :label="name"
-                @input="$emit('update:params', parameters)"
               >
               </v-text-field>
             </v-col>
@@ -102,10 +100,9 @@ import * as api from "../utils/api";
 
 export default {
   name: "App",
-  props: ["endpoint", "receipt", "params"],
+  props: ["endpoint", "receipt", "params", "httpParams"],
   data() {
     return {
-      parameters: {},
       gatewayKey: "",
       response: {},
       dialogOpen: false,
@@ -129,7 +126,7 @@ export default {
     curlString() {
       return `curl -v -X POST -H 'Content-Type: application/json' \
        -H 'x-api-key: ${this.gatewayKey}' \\
--d '${JSON.stringify({ parameters: this.parameters })}' \\
+-d '${JSON.stringify({ parameters: this.params })}' \\
 '${this.url}'`;
     },
     url() {
@@ -141,6 +138,16 @@ export default {
       if (!this.params || !this.endpoint) return false;
       for (let param in this.params) if (!this.params[param]) return false;
       return true;
+    },
+    allParams() {
+      let paramsList = this.endpoint.parameters.map((param) => param.name);
+      paramsList.push(...["_type", "_path"]);
+      let params = {};
+      paramsList.forEach((param) => {
+        params[param] = "";
+      });
+      for (let param in this.params) params[param] = this.params[param];
+      return params;
     },
   },
 };

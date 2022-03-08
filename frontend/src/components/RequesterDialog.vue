@@ -3,7 +3,10 @@
     <v-btn
       outlined
       color="primary"
-      @click="dialog = true"
+      @click="
+        connectWallet;
+        dialog = true;
+      "
       :disabled="!paramsAreFilled"
       text
     >
@@ -104,9 +107,6 @@ export default {
       rrpContract: null,
       dialog: false,
     };
-  },
-  async mounted() {
-    this.connectWallet();
   },
   methods: {
     async connectWallet() {

@@ -14,7 +14,7 @@
     <v-main>
       <br />
       <v-row justify="center">
-        <v-col cols="12" md="10">
+        <v-col cols="12" md="11">
           <v-card max-width="100%" outlined>
             <br />
             <br />
@@ -41,18 +41,10 @@
               <HTTPDialog
                 :endpoint="endpoint"
                 :receipt="receipt"
-                :params="params"
+                :params.sync="params"
               />
               <v-spacer></v-spacer>
 
-              <!-- <v-btn
-                outlined
-                color="primary"
-                @click="requesterDialog = true"
-                :disabled="!paramsAreFilled"
-              >
-                Smart Contract Request
-              </v-btn> -->
               <RequesterDialog
                 :endpoint="endpoint"
                 :receipt="receipt"
