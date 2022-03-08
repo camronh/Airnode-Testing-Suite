@@ -99,7 +99,7 @@ export default {
       chainId: null,
       signer: null,
       address: "",
-      walletConnected: true,
+      walletConnected: false,
       sponsorAddress: "0xe2dB4f54F8FAB66e44386e49aFcB3EF4a87a8787",
       sponsorWalletAddress: "",
       sponsorWalletBalance: 0,

@@ -93,16 +93,6 @@ export default {
     },
   },
   methods: {
-    emitData() {
-      let endpoint = this.config.ois[0].endpoints.find(
-        (endpoint) => endpoint.name === this.selectedEndpoint
-      );
-
-      endpoint.endpointId = this.config.triggers.rrp.find(
-        (endpoint) => endpoint.endpointName === this.selectedEndpoint
-      ).endpointId;
-      this.$emit("update:endpoint", endpoint);
-    },
     parseParams() {
       let paramsList = this.endpoint.parameters.map((param) => param.name);
       paramsList.push(...["_type", "_path"]);
