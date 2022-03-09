@@ -1,19 +1,19 @@
 {
   "airnodeWallet": {
-    "airnodeAddress": "0x5CC8357acC9F605f66B710259751E87310c00536",
-    "airnodeAddressShort": "5cc8357",
-    "airnodeXpub": "xpub6DUdVXi3jAWv3yxQEMzqGEtBacZXBJ77vvHqXRJKCbVCk1RFa9CV1Bf9viseik9QzwHAHdxvDgnjFzDyqnFe4SE9vLsmMTtyarcJhwukhia"
+    "airnodeAddress": "0x849d0BAbB15212fA166E33Cc9F1715786d0c482D",
+    "airnodeAddressShort": "849d0ba",
+    "airnodeXpub": "xpub6CgrZQPBvUzxsYmcHZPJs1L5LLnJPCbSuJivQhTqAbiW4PejBd9hYnNjmto1vezTxG75wef9aHbmzGw97fJHrJBubKXEVgU7zQNYQtZg3Kc"
   },
   "deployment": {
-    "airnodeAddressShort": "5cc8357",
+    "airnodeAddressShort": "849d0ba",
     "cloudProvider": {
       "type": "aws",
       "region": "us-east-1"
     },
     "stage": "dev",
-    "nodeVersion": "0.3.1"
+    "nodeVersion": "0.4.0"
   },
   "api": {
-    "httpGatewayUrl": "https://l1b1mimao2.execute-api.us-east-1.amazonaws.com/v1/test"
+    "httpGatewayUrl": "https://kxcx6z66s2.execute-api.us-east-1.amazonaws.com/v1/test"
   }
 }

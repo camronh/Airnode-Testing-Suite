@@ -68,14 +68,6 @@
                 :value="curlString"
               >
               </v-textarea>
-              <v-text-field
-                outlined
-                dense
-                :value="response ? response.values : ''"
-                label="Result"
-                readonly
-                :disabled="!response"
-              ></v-text-field>
             </v-col>
             <v-col cols="12" md="6">
               <v-textarea
@@ -87,6 +79,17 @@
                 :disabled="!response"
               >
               </v-textarea>
+            </v-col>
+            <v-col cols="12" md="12">
+              <v-text-field
+                outlined
+                dense
+                :loading="makingRequest"
+                :value="response ? response.values : ''"
+                label="Result"
+                readonly
+                :disabled="!response"
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-card-text>
@@ -106,11 +109,13 @@ export default {
       gatewayKey: "",
       response: {},
       dialogOpen: false,
+      makingRequest: false,
     };
   },
   methods: {
     async makeRequest() {
       console.log("Making request...");
+      this.makingRequest = true;
       try {
         this.response = await api.makeRequest(
           this.url,
@@ -120,6 +125,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      this.makingRequest = false;
     },
   },
   computed: {

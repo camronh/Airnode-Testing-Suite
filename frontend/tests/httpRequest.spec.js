@@ -15,4 +15,5 @@ test("HTTP Request", async ({ page }) => {
   await page.type("text=_path", "randomNumber");
   await page.click("text=HTTP Request");
   await expect(page.locator("text=curl")).toBeVisible();
+  await page.type("text=Gateway Key", "3bdbbbd2-b090-4b16-9a80-980de28bd7zz");
 });

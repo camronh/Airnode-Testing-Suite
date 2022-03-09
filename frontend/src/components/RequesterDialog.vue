@@ -21,7 +21,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <v-card-subtitle>
+        <v-card-subtitle v-if="walletConnected">
           SponsorWallet Balance: {{ sponsorWalletBalance }} ETH
         </v-card-subtitle>
         <v-card-text>
@@ -44,6 +44,7 @@
                 block
                 outlined
                 text
+                :disabled="!sponsorWalletFunded || makingRequest"
                 color="primary"
                 @click="makeRequest"
                 v-if="walletConnected"
@@ -149,6 +150,8 @@ export default {
         );
 
         this.walletConnected = true;
+        console.log(this.rrpContract.filters);
+
         console.log(this.params);
       } catch (error) {
         console.log(error);
@@ -168,13 +171,14 @@ export default {
         // Wait for tx to be mined
         await tx.wait();
         await this.connectWallet();
-        this.postToLog(`Sent 0.5 ETH to Sponsor Wallet`, true);
+        this.postToLog(`Sent 0.5 ETH to Sponsor Wallet`);
       } catch (error) {
         this.postToLog(`Error funding Sponsor Wallet: ${error.message}`);
       }
       this.fundingSponsorWallet = false;
     },
     async makeRequest() {
+      this.makingRequest = true;
       const { encode } = require("@api3/airnode-abi");
       this.postToLog(
         `Airnode Address: ${this.receipt.airnodeWallet.airnodeAddress}
@@ -188,7 +192,7 @@ Params: ${JSON.stringify(this.params)}\n\nMaking Request...`,
           params.push({
             type: "string32",
             name: key,
-            value: this.params[key],
+            value: key == "_type" ? "string" : this.params[key],
           });
         }
         const { provider, rrpContract, requesterContract } = this;
@@ -207,19 +211,35 @@ Params: ${JSON.stringify(this.params)}\n\nMaking Request...`,
             resolve(parsedLog.args.requestId);
           })
         );
-        this.postToLog(`Request ID: ${requestId}`);
-        this.postToLog("Waiting for Airnode to respond with COVID cases...");
-        await new Promise((resolve) =>
+        this.postToLog(`Request put on chain!`);
+        this.postToLog(`Request ID: ${requestId}\n`);
+        this.postToLog("Waiting for Airnode to respond ...");
+        const fulfilledPromise = new Promise((resolve) =>
           provider.once(
             rrpContract.filters.FulfilledRequest(null, requestId),
             resolve
           )
         );
+        const failedPromise = new Promise((resolve) =>
+          provider.once(
+            rrpContract.filters.FailedRequest(null, requestId),
+            resolve
+          )
+        );
+        let response = await Promise.race([fulfilledPromise, failedPromise]);
+        console.log({ response });
         const decodedData = await requesterContract.decodedData(requestId);
-        this.postToLog(`Decoded Data: ${decodedData}`);
+        console.log({ decodedData });
+        if (!decodedData) this.postToLog(`Airnode request failed! ❌`);
+        else this.postToLog(`Airnode request fulfilled! ✅`);
+        this.postToLog(
+          `Etherscan: https://ropsten.etherscan.io/tx/${response.transactionHash}\n`
+        );
+        if (decodedData) this.postToLog(`Result: ${decodedData}`);
       } catch (error) {
         this.postToLog("Error:\n" + error.message);
       }
+      this.makingRequest = false;
     },
     postToLog(text, clear) {
       if (clear) this.logString = "";
@@ -249,6 +269,11 @@ Params: ${JSON.stringify(this.params)}\n\nMaking Request...`,
       if (!this.params || !this.endpoint) return false;
       for (let param in this.params) if (!this.params[param]) return false;
       return true;
+    },
+    sponsorWalletFunded() {
+      const wei = ethers.utils.parseEther(this.sponsorWalletBalance);
+      const weiThreshold = ethers.utils.parseEther(".05");
+      return Number(wei) >= Number(weiThreshold);
     },
   },
 };

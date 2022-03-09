@@ -31,9 +31,9 @@
     </v-row>
     <template v-else>
       <v-card-text>
-        <b>Airnode Address:</b> {{ receipt.airnodeWallet.airnodeAddress }}<br />
         <b>{{ receipt.deployment.cloudProvider.type.toUpperCase() }}:</b>
-        {{ receipt.deployment.cloudProvider.region }}<br />
+        {{ receipt.deployment.cloudProvider.region }}<br /><br />
+        <b>Airnode Address:</b> {{ receipt.airnodeWallet.airnodeAddress }}<br />
       </v-card-text>
     </template>
   </v-card>

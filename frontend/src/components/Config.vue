@@ -32,7 +32,8 @@
     <template v-else>
       <v-card-text>
         <b>Title:</b> {{ config.ois[0].title }}<br />
-        <b>Base URL:</b>
+        <br />
+        <b>Base URL:</b><br />
         {{ config.ois[0].apiSpecifications.servers[0].url }}<br />
       </v-card-text>
     </template>

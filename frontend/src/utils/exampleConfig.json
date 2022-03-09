@@ -108,18 +108,12 @@
           }
         ],
         "security": {
-          "Auth_Token": [],
           "relayChainId": [],
           "relaySponsor": [],
           "relayRequester": []
         },
         "components": {
           "securitySchemes": {
-            "Auth_Token": {
-              "type": "apiKey",
-              "in": "query",
-              "name": "Auth_Token"
-            },
             "relayChainId": {
               "in": "header",
               "type": "relayChainId",
@@ -242,11 +236,5 @@
       ]
     }
   ],
-  "apiCredentials": [
-    {
-      "oisTitle": "CamsCSRNG",
-      "securitySchemeName": "Auth_Token",
-      "securitySchemeValue": "${CamsCSRNG_Auth_Token}"
-    }
-  ]
+  "apiCredentials": []
 }
