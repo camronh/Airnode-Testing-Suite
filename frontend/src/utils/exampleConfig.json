@@ -54,8 +54,7 @@
   ],
   "nodeSettings": {
     "cloudProvider": {
-      "type": "aws",
-      "region": "us-east-1"
+      "type": "local"
     },
     "airnodeWalletMnemonic": "${MNEMONIC}",
     "logFormat": "plain",

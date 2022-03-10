@@ -5,9 +5,8 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn text>
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+      <v-btn icon href="https://docs.api3.org/airnode/v0.4/grp-developers/call-an-airnode.html" target="_blank" >
+        <v-icon color="primary">mdi-information-outline</v-icon>
       </v-btn>
     </v-app-bar>
 

@@ -14,5 +14,5 @@ test("Blockchain Request", async ({ page }) => {
   await page.type("text=_type", "string");
   await page.type("text=_path", "randomNumber");
   await page.click("text=Blockchain Request");
-  await expect(page.locator("text=SponsorWallet")).toBeVisible();
+  await expect(page.locator("text=Connect Wallet")).toBeVisible();
 });
