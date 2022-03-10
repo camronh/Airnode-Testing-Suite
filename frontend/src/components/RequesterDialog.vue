@@ -190,7 +190,7 @@ Params: ${JSON.stringify(this.params)}\n\nMaking Request...`,
         let params = [];
         for (let key in this.params) {
           params.push({
-            type: "string32",
+            type: "string",
             name: key,
             value: key == "_type" ? "string" : this.params[key],
           });
