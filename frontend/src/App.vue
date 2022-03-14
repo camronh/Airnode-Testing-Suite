@@ -5,9 +5,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon href="https://docs.api3.org/airnode/v0.4/grp-developers/call-an-airnode.html" target="_blank" >
-        <v-icon color="primary">mdi-information-outline</v-icon>
-      </v-btn>
+      <Directions />
     </v-app-bar>
 
     <v-main>
@@ -67,6 +65,7 @@ import Receipt from "./components/Receipt.vue";
 import Endpoint from "./components/Endpoint.vue";
 import HTTPDialog from "./components/HTTPDialog.vue";
 import RequesterDialog from "./components/RequesterDialog.vue";
+import Directions from "./components/Directions.vue";
 
 export default {
   name: "App",
@@ -76,6 +75,7 @@ export default {
     Endpoint,
     HTTPDialog,
     RequesterDialog,
+    Directions,
   },
   data: () => ({
     config: null,

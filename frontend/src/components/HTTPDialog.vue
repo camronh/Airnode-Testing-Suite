@@ -74,7 +74,9 @@
                 dense
                 label="Raw Response"
                 outlined
-                :value="JSON.stringify(response, null, 2)"
+                :value="
+                  response.values ? JSON.stringify(response, null, 2) : ''
+                "
                 readonly
                 :disabled="!response"
               >
@@ -85,7 +87,7 @@
                 outlined
                 dense
                 :loading="makingRequest"
-                :value="response ? response.values : ''"
+                :value="response.values ? response.values : ''"
                 label="Result"
                 readonly
                 :disabled="!response"
@@ -130,6 +132,7 @@ export default {
   },
   computed: {
     curlString() {
+      if (!this.paramsAreFilled || !this.gatewayKey) return "";
       return `curl -v -X POST -H 'Content-Type: application/json' \
        -H 'x-api-key: ${this.gatewayKey}' \\
 -d '${JSON.stringify({ parameters: this.params })}' \\
@@ -146,10 +149,10 @@ export default {
       return true;
     },
     allParams() {
-      let paramsList = this.endpoint.parameters.map((param) => param.name);
+      let paramsList = this.endpoint.parameters.map(param => param.name);
       paramsList.push(...["_type", "_path"]);
       let params = {};
-      paramsList.forEach((param) => {
+      paramsList.forEach(param => {
         params[param] = "";
       });
       for (let param in this.params) params[param] = this.params[param];
