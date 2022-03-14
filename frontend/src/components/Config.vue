@@ -10,6 +10,7 @@
     height="100%"
     max-height="100%"
     outlined
+    tile
   >
     <v-card-title class="justify-center">Config</v-card-title>
     <v-card-subtitle v-if="!config" class="text-center">

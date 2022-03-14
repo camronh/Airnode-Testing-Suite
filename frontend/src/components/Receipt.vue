@@ -10,6 +10,7 @@
     max-height="100%"
     id="receipt-card"
     outlined
+    tile
   >
     <v-card-title class="justify-center"> Receipt</v-card-title>
     <v-card-subtitle v-if="!receipt" class="text-center">

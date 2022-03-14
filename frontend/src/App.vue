@@ -14,7 +14,7 @@
       <br />
       <v-row justify="center">
         <v-col cols="12" md="11">
-          <v-card max-width="100%" outlined>
+          <v-card max-width="100%" outlined tile>
             <br />
             <br />
             <v-row justify="center">
