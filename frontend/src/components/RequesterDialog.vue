@@ -58,6 +58,12 @@
           <v-divider></v-divider>
           <br />
           <v-row align="center" justify="center">
+            <v-card-text
+              class="text-center"
+              v-if="!onRopsten"
+            >
+              Be sure you are connected to the Ropsten network!
+            </v-card-text>
             <v-btn
               v-if="!walletConnected"
               @click="connectWallet"
@@ -106,6 +112,7 @@ export default {
       sponsorWalletBalance: 0,
       requesterContract: null,
       rrpContract: null,
+      onRopsten: true,
       dialog: false,
     };
   },
@@ -123,6 +130,10 @@ export default {
         this.address = await this.signer.getAddress();
         const network = await this.provider.getNetwork();
         this.chainId = network.chainId;
+        if (this.chainId !== 3) {
+          this.onRopsten = false;
+          throw "Not on Ropsten";
+        } else this.onRopsten = true;
         this.requesterContract = new ethers.Contract(
           this.requesterAddress,
           this.requesterAbi,
