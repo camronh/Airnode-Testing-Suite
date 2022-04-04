@@ -26,6 +26,7 @@
             <v-row justify="center">
               <v-col cols="12" md="10">
                 <Endpoint
+                  v-if="config && receipt"
                   :config="config"
                   :endpoint.sync="endpoint"
                   :params.sync="params"

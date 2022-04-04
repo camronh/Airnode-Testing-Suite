@@ -14,11 +14,27 @@
           </v-btn>
         </v-card-title>
         <v-card-text>
-          Welcome to the Airnode Testing Suite! This suite is designed to help
-          you test your Airnode on and off-chain. It is assumed that you have
-          done an cloud deployment of your Airnode and have a copy of your
-          deployment files handy. You will also need Metamask with some Ropsten
-          test ETH for the blockchain requests.
+          Welcome to the
+          <a
+            href="https://master.d3unh1kz3ytpci.amplifyapp.com/"
+            target="_blank"
+            >Airnode Testing Suite</a
+          >! This suite is designed to help you test your
+          <a href="https://docs.api3.org/airnode/v0.5/" target="_blank"
+            >Airnode</a
+          >
+          on and off-chain. It is assumed that you have done an
+          <a
+            href="https://docs.api3.org/airnode/v0.5/grp-providers/tutorial/"
+            target="_blank"
+            >cloud deployment</a
+          >
+          of your Airnode and have a copy of your deployment files handy. You
+          will also need
+          <a href="https://metamask.io/" target="_blank">Metamask</a> with some
+          Ropsten testnet ETH for the blockchain requests. To get Ropsten test
+          ETH, you may use a
+          <a href="https://ropsten.oregonctf.org/" target="_blank">faucet</a>.
         </v-card-text>
         <br />
 
@@ -43,10 +59,18 @@
           check the boxes for any parameters you would like to pass to the
           endpoint, then fill in their values. Keep in mind,
           <code>_type</code> and <code>_path</code> are
-          <a href="https://docs.api3.org/ois/v1.0.0/reserved-parameters.html"
-            >Reserved Parameters <v-icon x-small>mdi-open-in-new</v-icon></a
+          <a
+            href="https://docs.api3.org/ois/v1.0.0/reserved-parameters.html"
+            target="_blank"
+            >Reserved Parameters</a
           >
-          required by Airnode.
+          required by Airnode. The <code>_type</code> defines the
+          <a
+            href="https://docs.soliditylang.org/en/latest/abi-spec.html#types"
+            target="_blank"
+            >Solidity type</a
+          >, and the <code>_path</code> defines the value to be returned
+          on-chain.
         </v-card-text>
         <br />
 
@@ -57,9 +81,10 @@
         <v-card-text>
           Before testing on-chain, we will use the
           <a
-            href="https://docs.api3.org/airnode/v0.4/grp-providers/guides/build-an-airnode/http-gateway.html"
-            >Airnode HTTP Gateway <v-icon x-small>mdi-open-in-new</v-icon></a
-          >
+            href="https://docs.api3.org/airnode/v0.5/grp-providers/guides/build-an-airnode/http-gateway.html"
+            target="_blank"
+            >Airnode HTTP Gateway
+          </a>
           to quickly and easily make sure our request is a valid Blockchain
           request. Press the HTTP Request button to open the HTTP Testing menu.
           In the field labeled "Gateway Key", input the
@@ -76,13 +101,16 @@
         <v-card-text>
           When you are satisfied with the response from the HTTP Gateway
           testing, we can move on to an on-chain request. Close the HTTP Gateway
-          menu and press "Blockchain Request".
-          <u><b>Connect your metamask to Ropsten</b></u> and fund the
-          <a href="https://docs.api3.org/airnode/v0.4/concepts/sponsor.html"
-            >Sponsor Wallet <v-icon x-small>mdi-open-in-new</v-icon></a
+          menu and press &quot;Blockchain Request&quot;. Connect your Metamask
+          to Ropsten testnet and fund the
+          <a
+            href="https://docs.api3.org/airnode/v0.5/concepts/sponsor.html#sponsorwallet"
+            target="_blank"
+            >Sponsor Wallet</a
           >
-          if the "SponsorWallet Balance" is 0. When you're ready, press "Make
-          Request" and keep an eye on the logs for more information.
+          if the &quot;SponsorWallet Balance&quot; is 0. When you&#39;re ready,
+          press &quot;Make Request&quot; and keep an eye on the logs for more
+          information.
         </v-card-text>
       </v-card>
     </v-dialog>
