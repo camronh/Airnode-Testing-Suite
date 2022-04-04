@@ -109,7 +109,7 @@ export default {
   props: ["endpoint", "receipt", "params", "httpParams"],
   data() {
     return {
-      gatewayKey: "",
+      gatewayKey: localStorage.gatewayKey || "",
       response: {},
       dialogOpen: false,
       makingRequest: false,
@@ -126,6 +126,7 @@ export default {
           this.params
         );
         if (!this.response) throw "Request Failed";
+        localStorage.gatewayKey = this.gatewayKey;
       } catch (error) {
         this.response = {
           values:
