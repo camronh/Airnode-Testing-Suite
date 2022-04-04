@@ -75,7 +75,7 @@
                 label="Raw Response"
                 outlined
                 :value="
-                  response.values ? JSON.stringify(response, null, 2) : ''
+                  response.encodedValue ? JSON.stringify(response, null, 2) : ''
                 "
                 readonly
                 :disabled="!response"
@@ -87,9 +87,10 @@
                 outlined
                 dense
                 :loading="makingRequest"
-                :value="response.values ? response.values : ''"
+                :value="response.values"
                 label="Result"
                 readonly
+                :error="response.values && !response.encodedValue"
                 :disabled="!response"
               ></v-text-field>
             </v-col>
@@ -124,7 +125,12 @@ export default {
           this.gatewayKey,
           this.params
         );
+        if (!this.response) throw "Request Failed";
       } catch (error) {
+        this.response = {
+          values:
+            "Request Failed! Try the Curl Command for more verbose logging",
+        };
         console.log(error);
       }
       this.makingRequest = false;
@@ -149,10 +155,10 @@ export default {
       return true;
     },
     allParams() {
-      let paramsList = this.endpoint.parameters.map(param => param.name);
+      let paramsList = this.endpoint.parameters.map((param) => param.name);
       paramsList.push(...["_type", "_path"]);
       let params = {};
-      paramsList.forEach(param => {
+      paramsList.forEach((param) => {
         params[param] = "";
       });
       for (let param in this.params) params[param] = this.params[param];
